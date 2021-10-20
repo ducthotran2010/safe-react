@@ -9,9 +9,9 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'http://gnosis.axieinfinity.co/cgw/v1',
-  txServiceUrl: 'http://gnosis.axieinfinity.co/txs/api/v1',
-  safeUrl: 'http://gnosis.axieinfinity.co/app',
+  clientGatewayUrl: 'https://gnosis.axieinfinity.co/cgw/v1',
+  txServiceUrl: 'https://gnosis.axieinfinity.co/txs/api/v1',
+  safeUrl: 'https://gnosis-ronin.vercel.app/#/open',
   gasPrice: 1e9, // 1 Gwei
   rpcServiceUrl: 'https://testnet.skymavis.one/rpc',
   safeAppsRpcServiceUrl: 'https://testnet.skymavis.one/rpc',
