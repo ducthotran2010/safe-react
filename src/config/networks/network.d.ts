@@ -2,6 +2,7 @@
 
 export enum WALLETS {
   METAMASK = 'metamask',
+  RONIN = 'ronin',
   WALLET_CONNECT = 'walletConnect',
   TREZOR = 'trezor',
   LEDGER = 'ledger',
@@ -54,6 +55,7 @@ export enum ETHEREUM_NETWORK {
   ENERGY_WEB_CHAIN = '246',
   LOCAL = '4447',
   VOLTA = '73799',
+  RONIN = '2021', // testnet
 }
 
 export type NetworkSettings = {
