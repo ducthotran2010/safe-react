@@ -141,6 +141,10 @@ export const isFeatureEnabled = memoize((feature: FEATURES): boolean => {
 
 export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disabledWallets || []
 
+export const getExchangeRatePriceUrl = (): string | undefined => getConfig()?.exchangeRatePriceUrl
+
+export const getIconUrl = (): string | undefined => getConfig()?.iconUrl
+
 export const getNetworkInfo = (): NetworkSettings => getConfig().network
 
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID

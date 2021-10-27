@@ -18,6 +18,8 @@ const baseConfig: EnvironmentSettings = {
   networkExplorerName: 'Ronin Explorer',
   networkExplorerUrl: 'https://testnet-explorer.skymavis.one',
   networkExplorerApiUrl: 'https://testnet-explorer.skymavis.one/api',
+  exchangeRatePriceUrl: 'https://exchange-rate.axieinfinity.com/',
+  iconUrl: 'https://assets.axieinfinity.com/explorer/images/contract-icon',
 }
 
 const testnet: NetworkConfig = {

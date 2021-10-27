@@ -106,6 +106,8 @@ export type EnvironmentSettings = GasPrice & {
   networkExplorerName: string
   networkExplorerUrl: string
   networkExplorerApiUrl: string
+  exchangeRatePriceUrl?: string
+  iconUrl?: string
 }
 
 type SafeEnvironments = {
