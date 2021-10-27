@@ -13,6 +13,7 @@ import coinbaseIcon from './icon-coinbase.svg'
 import operaIcon from './icon-opera.png'
 import squarelinkIcon from './icon-squarelink.png'
 import keystoneIcon from './icon-keystone.png'
+import roninIcon from './icon-ronin.svg'
 
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 
@@ -71,6 +72,10 @@ const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } 
   },
   [WALLET_PROVIDER.SQUARELINK]: {
     src: squarelinkIcon,
+    height: 25,
+  },
+  [WALLET_PROVIDER.RONIN]: {
+    src: roninIcon,
     height: 25,
   },
 }

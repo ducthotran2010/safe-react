@@ -15,6 +15,7 @@ type Wallet = WalletInitOptions & {
 const rpcUrl = getRpcServiceUrl()
 const wallets: Wallet[] = [
   { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
+  { walletName: WALLETS.RONIN, desktop: true },
   {
     walletName: WALLETS.WALLET_CONNECT,
     preferred: true,
