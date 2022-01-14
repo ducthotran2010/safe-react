@@ -9,20 +9,20 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://gnosis.axieinfinity.co/cgw/v1',
-  txServiceUrl: 'https://gnosis.axieinfinity.co/txs/api/v1',
-  safeUrl: 'https://gnosis-ronin.vercel.app/#/open',
-  gasPrice: 1e9, // 1 Gwei
-  rpcServiceUrl: 'https://testnet.skymavis.one/rpc',
-  safeAppsRpcServiceUrl: 'https://testnet.skymavis.one/rpc',
+  clientGatewayUrl: 'https://gnonis-cgw.roninchain.com/v1',
+  txServiceUrl: 'https://gnonis-txs.roninchain.com/api/v1',
+  safeUrl: 'https://gnosis-safe.roninchain.com/',
+  gasPrice: 1e9,
+  rpcServiceUrl: 'https://api.roninchain.com/rpc',
+  safeAppsRpcServiceUrl: 'https://api.roninchain.com/rpc',
   networkExplorerName: 'Ronin Explorer',
-  networkExplorerUrl: 'https://testnet-explorer.skymavis.one',
-  networkExplorerApiUrl: 'https://testnet-explorer.skymavis.one/api',
+  networkExplorerUrl: 'http://explorer.roninchain.com',
+  networkExplorerApiUrl: 'http://explorer.roninchain.com/api',
   exchangeRatePriceUrl: 'https://exchange-rate.axieinfinity.com/',
   iconUrl: 'https://assets.axieinfinity.com/explorer/images/contract-icon',
 }
 
-const testnet: NetworkConfig = {
+const mainnet: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
@@ -39,7 +39,7 @@ const testnet: NetworkConfig = {
     backgroundColor: '#1c94f4',
     textColor: '#ffffff',
     label: 'Ronin',
-    isTestNet: true,
+    isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
@@ -68,4 +68,4 @@ const testnet: NetworkConfig = {
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
 
-export default testnet
+export default mainnet

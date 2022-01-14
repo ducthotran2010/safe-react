@@ -13,6 +13,7 @@ export const isTxHashSignedWithPrefix = (txHash: string, signature: string, owne
     const recoveredAddress = bufferToHex(pubToAddress(recoveredData))
     hasPrefix = !sameString(recoveredAddress, ownerAddress)
   } catch (e) {
+    console.error(e)
     hasPrefix = true
   }
   return hasPrefix
@@ -46,6 +47,8 @@ export const adjustV: AdjustVOverload = (
     }
     const adjusted = signature.slice(0, -2) + sigV.toString(16)
     const signatureHasPrefix = isTxHashSignedWithPrefix(safeTxHash as string, adjusted, sender as string)
+    console.log('signatureHasPrefix', signatureHasPrefix)
+
     if (signatureHasPrefix) {
       sigV += 4
     }

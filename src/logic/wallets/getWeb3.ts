@@ -73,7 +73,7 @@ export const isSmartContractWallet = async (web3Provider: Web3, account: string)
 }
 
 export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
-  const account = (await getAccountFrom(web3Instance)) || ''
+  const account = (await getAccountFrom(web3Instance))?.toLowerCase() || ''
   const network = await getNetworkIdFrom(web3Instance)
   const smartContractWallet = await isSmartContractWallet(web3Instance, account)
   const hardwareWallet = isHardwareWallet(providerName)

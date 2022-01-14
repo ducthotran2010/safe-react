@@ -28,6 +28,7 @@ interface AxieExchangeRate {
   eth: Currency
   slp: Currency
   usd: Currency
+  usdc: Currency
   ron: Currency
   axs: Currency
 }
@@ -42,11 +43,11 @@ export const getExchangeRatePrice = async () => {
   }
 }
 
-const AXS_ADDRESS = '0x3C4e17b9056272Ce1b49F6900d8cFD6171a1869d'.toLowerCase()
-const SLP_ADDRESS = '0x82f5483623D636BC3deBA8Ae67E1751b6CF2Bad2'.toLowerCase()
-const USDC_ADDRESS = '0x0a20CB59AF750dDE695264Fd1a3709066a065c18'.toLowerCase()
-const WETH_ADDRESS = '0x29C6F8349A028E1bdfC68BFa08BDee7bC5D47E16'.toLowerCase()
-const WRON_ADDRESS = '0xA959726154953bAe111746E265E6d754F48570E6'.toLowerCase()
+const AXS_ADDRESS = '0x97a9107c1793bc407d6f527b77e7fff4d812bece'.toLowerCase()
+const SLP_ADDRESS = '0xa8754b9fa15fc18bb59458815510e40a12cd2014'.toLowerCase()
+const USDC_ADDRESS = '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc'.toLowerCase()
+const WETH_ADDRESS = '0xc99a6a985ed2cac1ef41640596c5a5f9f4e19ef5'.toLowerCase()
+const WRON_ADDRESS = '0xe514d9deb7966c8be0ca922de8a064264ea6bcd4'.toLowerCase()
 const NATIVE_ADDRESS = '0x0000000000000000000000000000000000000000'.toLowerCase()
 
 const getLogoUri = (icon: string) => {
@@ -81,65 +82,67 @@ const updatePrice = async (prices: {
       if (response.ok) {
         const exchangeRate = (await response.json()) as AxieExchangeRate
 
+        let fiatTotal = new BigNumber(0)
         const ronPrice = new BigNumber(exchangeRate.ron.usd)
         const ethPrice = new BigNumber(exchangeRate.eth.usd)
         const slpPrice = new BigNumber(exchangeRate.slp.usd)
         const axsPrice = new BigNumber(exchangeRate.axs.usd)
-        const usdPrice = new BigNumber(exchangeRate.usd.usd)
+        const usdcPrice = new BigNumber(exchangeRate.usdc.usd)
 
-        const ronInfo = prices.items.find((item) => item.tokenInfo.address == NATIVE_ADDRESS)
-        const ronAmount = new BigNumber(ronInfo?.balance || '0')
-        const ronFiatBalance = ronPrice.multipliedBy(ronAmount).div(new BigNumber(10).pow(18))
+        const items = prices.items.map((item) => {
+          const address = item.tokenInfo.address.toLowerCase()
+          const balance = new BigNumber(item.balance)
+          const mask = new BigNumber(10).pow(item.tokenInfo.decimals)
+
+          let fiatBalance = new BigNumber(item.fiatBalance)
+          let fiatConversion = new BigNumber(item.fiatConversion)
+          let logoUri = item.tokenInfo.logoUri
+          if (address == NATIVE_ADDRESS || address == WRON_ADDRESS) {
+            fiatBalance = ronPrice.multipliedBy(balance).div(mask)
+            fiatConversion = ronPrice
+            logoUri = getLogoUri('ron')
+          }
+
+          if (address == AXS_ADDRESS) {
+            fiatBalance = axsPrice.multipliedBy(balance).div(mask)
+            fiatConversion = axsPrice
+            logoUri = getLogoUri('axs')
+          }
+
+          if (address == SLP_ADDRESS) {
+            fiatBalance = slpPrice.multipliedBy(balance).div(mask)
+            fiatConversion = slpPrice
+            logoUri = getLogoUri('slp')
+          }
+
+          if (address == WETH_ADDRESS) {
+            fiatBalance = ethPrice.multipliedBy(balance).div(mask)
+            fiatConversion = ethPrice
+            logoUri = getLogoUri('eth')
+          }
+
+          if (address == USDC_ADDRESS) {
+            fiatBalance = usdcPrice.multipliedBy(balance).div(mask)
+            fiatConversion = usdcPrice
+            logoUri = getLogoUri('usdc-48')
+          }
+
+          fiatTotal = fiatTotal.plus(fiatBalance)
+
+          return {
+            ...item,
+            fiatBalance: fiatBalance.toString(),
+            fiatConversion: fiatConversion.toString(),
+            tokenInfo: {
+              ...item.tokenInfo,
+              logoUri: logoUri || item.tokenInfo.logoUri,
+            },
+          }
+        })
 
         return {
-          fiatTotal: ronFiatBalance.toString(),
-          items: prices.items.map((item) => {
-            const address = item.tokenInfo.address.toLowerCase()
-            const balance = new BigNumber(item.balance)
-            const mask = new BigNumber(10).pow(item.tokenInfo.decimals)
-
-            let fiatBalance = item.fiatBalance
-            let fiatConversion = item.fiatConversion
-            let logoUri = item.tokenInfo.logoUri
-            if (address == NATIVE_ADDRESS || address == WRON_ADDRESS) {
-              fiatBalance = ronFiatBalance.toString()
-              fiatConversion = ronPrice.toString()
-            }
-
-            if (address == AXS_ADDRESS) {
-              fiatBalance = axsPrice.multipliedBy(balance).div(mask).toString()
-              fiatConversion = axsPrice.toString()
-              logoUri = getLogoUri('axs')
-            }
-
-            if (address == SLP_ADDRESS) {
-              fiatBalance = slpPrice.multipliedBy(balance).div(mask).toString()
-              fiatConversion = slpPrice.toString()
-              logoUri = getLogoUri('slp')
-            }
-
-            if (address == WETH_ADDRESS) {
-              fiatBalance = ethPrice.multipliedBy(balance).div(mask).toString()
-              fiatConversion = ethPrice.toString()
-              logoUri = getLogoUri('eth')
-            }
-
-            if (address == USDC_ADDRESS) {
-              fiatBalance = usdPrice.multipliedBy(balance).div(mask).toString()
-              fiatConversion = usdPrice.toString()
-              logoUri = getLogoUri('usdc')
-            }
-
-            return {
-              ...item,
-              fiatBalance,
-              fiatConversion,
-              tokenInfo: {
-                ...item.tokenInfo,
-                logoUri: logoUri || item.tokenInfo.logoUri,
-              },
-            }
-          }),
+          fiatTotal: fiatTotal.toString(),
+          items,
         }
       }
     }

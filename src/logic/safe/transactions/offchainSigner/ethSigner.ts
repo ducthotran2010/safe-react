@@ -13,6 +13,16 @@ type EthSignerArgs = {
 export const ethSigner = async ({ safeTxHash, sender }: EthSignerArgs): Promise<string> => {
   const web3 = getWeb3()
 
+  console.log(
+    'ethSigner',
+    JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'eth_sign',
+      params: [sender, safeTxHash],
+      id: new Date().getTime(),
+    }),
+  )
+
   return new Promise(function (resolve, reject) {
     const provider = web3.currentProvider as AbstractProvider
     provider.sendAsync(
@@ -23,6 +33,8 @@ export const ethSigner = async ({ safeTxHash, sender }: EthSignerArgs): Promise<
         id: new Date().getTime(),
       },
       async function (err, signature) {
+        console.log('ress', err, signature)
+
         if (err) {
           return reject(err)
         }
@@ -33,6 +45,7 @@ export const ethSigner = async ({ safeTxHash, sender }: EthSignerArgs): Promise<
         }
 
         const sig = adjustV('eth_sign', signature.result, safeTxHash, sender)
+        console.log(`before=${signature.result}`, `after=${sig.replace(EMPTY_DATA, '')}`)
 
         resolve(sig.replace(EMPTY_DATA, ''))
       },

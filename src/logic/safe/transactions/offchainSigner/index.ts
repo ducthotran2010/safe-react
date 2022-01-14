@@ -28,7 +28,7 @@ const getSupportedSigners = (isHW: boolean, safeVersion: string) => {
     signers.push(SIGNERS.ETH_SIGN)
   }
 
-  return signers
+  return signers.reverse()
 }
 
 export const tryOffChainSigning = async (
@@ -43,9 +43,12 @@ export const tryOffChainSigning = async (
   for (const signingFunc of signerByWallet) {
     try {
       signature = await signingFunc({ ...txArgs, safeTxHash, safeVersion })
+      console.log('looping', signature)
 
       break
     } catch (err) {
+      console.warn('catched', err)
+
       if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
         throw err
       }

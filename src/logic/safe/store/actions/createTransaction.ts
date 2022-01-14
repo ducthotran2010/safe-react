@@ -135,7 +135,9 @@ export const createTransaction =
       const safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
 
       if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
+        console.log('bef tryOffChainSigning')
         const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
+        console.log('got signature', from, signature)
 
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
@@ -186,6 +188,8 @@ export const createTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
+      console.error('catched', err)
+
       onError?.()
 
       const notification = isTxPendingError(err)
